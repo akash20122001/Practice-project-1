@@ -7,6 +7,7 @@ import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import CreateForm from "./Components/CreateForm";
 import Posts from "./Components/Posts";
+import { PostContext } from "./Contexts/PostContext";
 
 function App() {
   const [flag, setFlag] = useState("show");
@@ -22,22 +23,27 @@ function App() {
   function handleOnClick(chosenButton) {
     if (chosenButton === "show") setFlag("show");
     else if (chosenButton === "create") setFlag("create");
-    console.log(flag);
+  }
+
+  const handleCreatePost = (name, description) => {
+    event.preventDefault();
+    const newPost = {name, description};
+    setPosts([...posts, newPost]);
   }
 
   return (
-    <>
+    <PostContext.Provider value={{posts, handleCreatePost, handleOnClick}}>
       <div className="flex h-screen w-full bg-blue-300">
-        <Sidebar onClickButton={handleOnClick} />
+        <Sidebar />
         <div className="flex flex-col justify-between w-[80%]">
           <Header />
 
-          {flag === "show" ? <Posts posts = {posts} /> : <CreateForm />}
+          {flag === "show" ? <Posts /> : <CreateForm/>}
 
           <Footer />
         </div>
       </div>
-    </>
+    </PostContext.Provider>
   );
 }
 
